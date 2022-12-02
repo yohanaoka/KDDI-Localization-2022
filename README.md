@@ -1,32 +1,30 @@
-# tokyo-localization-2022 dataset
+<h1 align="center">Tokyo Localization 2022 Dataset </h1>
 
-## Dataset Description
----
+This repository contains Tokyo-localization-2022 dataset used in **Recursive Rendering of 2D Images for Accurate Pose Estimation in a 3D Mesh Map** [[Siggraph Asia 2022](https://sa2022.siggraph.org/en/)].
+Our work proposed to localize the camera from a given 3D mesh model. 
+The tokyo-localization-2022 dataset contains the set of query images taken in Tokyo area with the ground-truth camera pose taken from [PLATEAU (https://www.mlit.go.jp/plateau/)](https://www.mlit.go.jp/plateau).  
 
-The tokyo-localization-2022 dataset is a set of query images taken in Tokyo and the ground-truth pose of query images based on 3D mesh model PLATEAU[^1]. If you use the dataset, you must agree to the terms of dataset license below.
-
-[^1]: PLATEAU: https://www.mlit.go.jp/plateau/
+To use this dataset, please read the license agreement for the dataset below.
 
 ## **Overview**
----
 
-Our tokyo-localization-2022 dataset contains the followings.
+Our dataset contains 
 
-1. 63 query images .
-2. Ground-truth poses (i.e., the position and rotation in 3D mesh model) of the query images.
-3. Geo-tag data (latitude, longitude, altitude, and azimuth obtained from geomagnetic sensors) of the query images when they was taken and intrinsic parameters of the camera.
+1. 63 query images;
+2. Ground-truth poses (i.e., the position and rotation in 3D mesh model) of the query images; and 
+3. Geo-tag data (latitude, longitude, altitude, and azimuth obtained from geomagnetic sensors) of the query images when they was taken and intrinsic parameters of the camera; and
+4. The x,y,z cooridnate of the query images in the 3D mesh model converted from the Geo-tag data.
 
-In addition, out dataset contains the following ***metadata*** for rendering images from PLATEAU. This is the experimental data we used for our reference examination "Pre-rendering".
+In addition, out dataset contains the ***metadata*** for rendering images from PLATEAU. This is the experimental data we used for our reference examination "Pre-rendering".
 
-4. Camera poses (i.e., the position and rotation in 3D mesh model)  and intrinsic parameters for rendering images.
+5. Camera poses of rendered images, i.e., the position and rotation in 3D mesh model and the intrinsic parameters.
 
 ## **Details of the query image and associated data for the query image**
----
 
 The query images are contained in the ZIP file in the tokyo-localization-2022/query directory.
-Associated data (query image list, Ground-truth pose, Geo-tag data and intrinsic parameters of the camera) are contained each npy files in the same directory.
+The associated data, i.e., query image list, Ground-truth pose, Geo-tag data and intrinsic parameters of the camera, are contained each npy files in the same directory.
 
-The Query image list file contains the file names of the images.
+The query image list file contains the file names of the images.
 Each associated data file contains each data in the same order as the query image list.
 
 For example, if you want to obtain the geo-tag data for IMG_0404.JPG, you can do so as follows.
@@ -34,26 +32,30 @@ For example, if you want to obtain the geo-tag data for IMG_0404.JPG, you can do
     ```
     import numpy as np
 
-    query_list = np.load("tokyo-localization-2022/query/query-list.npy")
-    geo-tag = np.load("tokyo-localization-2022/query/geo-tag.npy")
+    query_list = np.load("tokyo-localization-2022/query/query_list.npy")
+    geo-tag = np.load("tokyo-localization-2022/query/query_geo-tag.npy")
     geo-tag_0404 = geo-tag[query_list=="IMG_0404.JPG"])
     ```
 
 ### Ground-truth poses of the query images
 
-The ground-truth poses of query images are the position and rotation in the 3D mesh model and contained in ground-truth.npy file. They are contained in the form of a 3✕4 RT matrix, in the order of the query image list.
+The ground-truth poses of query images are the position and rotation in the 3D mesh model and contained in ground-truth_RT_matrix.npy file. They are contained in the form of a 3✕4 RT matrix, in the order of the query image list.
 
 ### Geo-tag
 
-The geo-tag data of the query images is contained in geo-tag.npy file in the order latitude, longitude, altitude, and azimuth obtained from geomagnetic sensors of the query images. 
-The geo-tag data includes latitude, longitude, altitude, and azimuth obtained from geomagnetic sensors. They are listed in this order for each image in the geo-tag.npy file.
+The geo-tag data of the query images is contained in query_geo-tag.npy file in the order latitude, longitude, altitude, and azimuth obtained from geomagnetic sensors of the query images. 
+The geo-tag data includes latitude, longitude, altitude, and azimuth obtained from geomagnetic sensors. They are listed in this order for each image in the query_geo-tag.npy file.
+In the case of missing data, the data is complemented by the average of the photos in the area where the query image was taken.
+
+### The x,y,z cooridnate of the query images in the 3D mesh model
+
+The x,y,z cooridnate of the query images in the 3D mesh model is contained in query_position_3d_mesh.npy file.
 
 ### Intrinsic parameters
 
 The intrinsic parameters of the camera taking the query images are the 3✕3 camera matrix and the 5 distortion coefficients and contained in intrinsic_parameters.npy. All query images are taken with the same camera, so it has one set of intrinsic parameters.
 
 ## **Details of metadata for the reference examination "Pre-rendering"**
----
 
 Metadata (rendered image list, position of the rendered images, rotaion of the rendered images and the camera poses of rendered images) are contained each npy files in the tokyo-localization-2022/render directory.
 
@@ -65,20 +67,20 @@ For example, if you want to obtain the the poses of rendered images for index_68
     ```
     import numpy as np
 
-    image_list = np.load("tokyo-localization-2022/render/image_name.npy")
-    RTmat = np.load("tokyo-localization-2022/render/RT_matrix.npy")
+    image_list = np.load("tokyo-localization-2022/render/remdered_image_list.npy")
+    RTmat = np.load("tokyo-localization-2022/render/rendered_image_RT_matrix.npy")
     RTmat_686037330000 = RTmat[image_list=="index_686037330000.png"])
     ```
 
-### position and rotaion of the rendered images
+### The cooridnate of the rendered images (position and rotaion)
 
-The position and rotation of the rendered images in the 3D map are contained in camera_position.npy and camera_rotation.npy, respectively.
+The position and rotation of the rendered images in the 3D map are contained in rendered_image_position.npy and rendered_image_rotation.npy, respectively.
 The position data is the x,y,z coordinates in the 3D mesh model.
 The rotation data is the Euler angle in the x-, y-, and z-axes in the 3D mesh model.
 
 ### Camera poses of rendered images
 
-The camera poses of rendered images are contained in RT_matrix.npy. They are the position and rotation in 3D mesh model. They are contained in the form of a 3✕4 RT matrix, in the order of the rendered image list.
+The camera poses of rendered images are contained in rendered_image_RT_matrix.npy. They are the position and rotation in 3D mesh model. They are contained in the form of a 3✕4 RT matrix, in the order of the rendered image list.
 
 ## 3D mesh model
 
@@ -117,3 +119,16 @@ KDDI Research USES ITS BEST EFFORTS TO PROVIDE DATA IN ACCORDANCE WITH ETHICAL P
 ### LIMITATION OF LIABILITY
 
 TO THE EXTENT ALLOWED BY LAW, IN NO EVENT SHALL KDDI Research AND ITS PARENT COMPANY BE LIABLE TO YOU OR ANY THIRD PARTY FOR ANY INDIRECT, CONSEQUENTIAL, INCIDENTAL, SPECIAL OR PUNITIVE DAMAGES, ARISING FROM YOUR USE OF THE DATA.
+
+
+## Bibtex citation
+
+```
+@inproceedings{Hanaoka2022_RecursiveRendering,
+  author    = {Yohei Hanaoka and
+               Suwichaya Suwanwimolkul and 
+               Satoshi Komorita},
+  title     = {{Recursive Rendering of 2D Images for Accurate Pose Estimation in a 3D Mesh Map}},
+  booktitle = {SIGGRAPH ASIA},
+  year      = {2022},
+}
